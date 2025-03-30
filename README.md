@@ -1,1 +1,1 @@
-# simpole-chatroom
+# simple-chatroom
