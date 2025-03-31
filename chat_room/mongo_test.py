@@ -1,15 +1,19 @@
-import asyncio
+import pytest
 from motor.motor_asyncio import AsyncIOMotorClient
 
-async def test_mongo():
-    client = AsyncIOMotorClient("mongodb://localhost:27017")
-    db = client.chat_db  # Make sure this matches your actual database
+@pytest.mark.asyncio
+async def test_mongo_connection():
+    connection_string = "mongodb://mongo:27017"
+    print(f"Connecting to Mongo at: {connection_string}")
+    
+    client = AsyncIOMotorClient(connection_string)
+    db = client.chat_db  # Adjust to your actual DB name
     messages = await db.message.find().to_list(length=10)
 
     if messages:
         for msg in messages:
             print(msg)
+        assert True
     else:
         print("❌ No messages found!")
-
-asyncio.run(test_mongo())
+        assert False  # Fail the test if nothing is found
