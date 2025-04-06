@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Poetry
+.poetry/
+*.lock
+
+# Virtualenvs
+.venv/
+env/
+venv/
+
+# VSCode / IDE config
+.vscode/
+.idea/
+
+# Docker
+*.log
+*.pid
+*.swp
+Dockerfile~
+docker-compose.override.yml
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Cache
+*.cache
+*.egg-info/
+.cache/
