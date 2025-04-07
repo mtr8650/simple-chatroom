@@ -1,24 +1,23 @@
+# main.py
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
-from chat_room.routes import router
+from motor.motor_asyncio import AsyncIOMotorClient
+from beanie import init_beanie
+from chat_room.models import User, Message
 from chat_room.auth_routes import router as auth_router
-from chat_room.database import init_db
-from fastapi.responses import Response
+from chat_room.chat_routes import router as chat_router
+import os
+from dotenv import load_dotenv
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await init_db()
-    yield
+load_dotenv()
 
-app = FastAPI(title="Chat Room API", lifespan=lifespan)
+app = FastAPI()
 
-app.include_router(router)
-app.include_router(auth_router)
+@app.on_event("startup")
+async def app_init():
+    client = AsyncIOMotorClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017"))
+    db = client["test_db"]  # ✅ Make sure this is not using .get_default_database()
+    await init_beanie(database=db, document_models=[User, Message])
 
-@app.get("/")
-async def root():
-    return {"message": "Chat Room API is running!"}
-
-@app.get("/favicon.ico", include_in_schema=False)
-async def favicon():
-    return Response(status_code=204)
+# ✅ REGISTER ROUTES IMMEDIATELY AFTER APP IS CREATED
+app.include_router(auth_router  )
+app.include_router(chat_router, tags=["chat"])

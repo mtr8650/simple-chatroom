@@ -3,7 +3,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 @pytest.mark.asyncio
 async def test_mongo_connection():
-    connection_string = "mongodb://mongo:27017"
+    connection_string = "mongodb://localhost:27017"
+
     print(f"Connecting to Mongo at: {connection_string}")
     
     client = AsyncIOMotorClient(connection_string)
